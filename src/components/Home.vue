@@ -20,8 +20,6 @@ export default {
   },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      response: "",
       images: [],
       currentImage: {}
     }
@@ -37,7 +35,6 @@ export default {
       var vm = this
       if (vm.signedIn){
         this.axios.get("https://api.instagram.com/v1/users/self/media/recent/?access_token="+this.accessToken).then(function(response){
-          vm.response = response
           vm.images = vm.response.data.data
           if (vm.images.length != 0) {
             vm.shuffleImages()
@@ -57,14 +54,23 @@ export default {
     },
     getCurrentImage: function () {
       console.log("getting image")
+      var vm = this
       var n = this.images.length
       var i = 0;
-      this.currentImage = this.images[i];
-      for(i = 1; i < n-1; i++){
-        setInterval(function() {
-          this.currentImage = this.images[i]
-        }, 120000)
-      }
+      vm.currentImage = vm.images[i];
+      
+      (function loop() {
+        setTimeout(function(){
+          vm.currentImage = vm.images[i]
+          i++
+          if (i == n ){
+            vm.getData()
+          }
+          else{
+            loop()
+          }
+        }, 1200000)
+      }())
     }
   },
   computed: {

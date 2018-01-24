@@ -15,7 +15,17 @@
     props: ['currentImage'],
     methods: {
       extractData: function () {
-        this.imageLink = this.currentImage.images.standard_resolution.url
+        var vm = this
+        if(vm.currentImage){
+          $('.imageDiv').transition({
+            animation: 'fade',
+            onComplete: function() {
+              vm.imageLink = vm.currentImage.images.standard_resolution.url
+              $('.imageDiv').transition('fade')
+            }
+          })
+          
+        }
       }
     },
     watch: {
